@@ -1,570 +1,474 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="google-site-verification" content="JEeKpQUBcl4zLs2Xj5qaYaBP9zH_1C4K1xJpiGH7_2I">
-
-      <meta name="description" content="Rijan Shrestha's personal portfolio — Computer Science student, programmer, and aspiring software developer from Nepal.">
-
-    <title>Rijan Shrestha | Computer Science Student & Portfolio</title>
-  
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Rijan Shrestha",
-  "url": "https://rijan0228.github.io/rijan-protofolio/",
-  "sameAs": [
-    "https://github.com/Rijan0228",
-    "https://www.instagram.com/rijanshrestha0228/"
-  ],
-  "jobTitle": "Computer Science Student",
-  "description": "Computer Science student interested in programming, web development, and technology."
-}
-</script>
-
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#05070b">
+  <meta name="description" content="Rijan Shrestha — Computer Science student exploring coding, software development and creative digital experiences.">
+  <meta name="author" content="Rijan Shrestha">
+  <meta property="og:title" content="Rijan Shrestha | Developer Portfolio">
+  <meta property="og:description" content="Explore my projects, skills and journey in technology.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rijan0228.github.io/rijan-protofolio/">
+  <title>Rijan Shrestha | Digital Portfolio</title>
+  <link rel="canonical" href="https://rijan0228.github.io/rijan-protofolio/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2305070b'/%3E%3Ctext x='50' y='67' font-size='48' text-anchor='middle' fill='%2300ffc3' font-family='monospace'%3ERS%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js" defer></script>
+  <script src="script.js" defer></script>
 </head>
 
 <body>
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <div class="loader-mark">RS<span>.</span></div>
+    <div class="loader-track"><span></span></div>
+    <p>INITIALIZING DIGITAL SPACE</p>
+  </div>
 
-    <!-- ================= NAVBAR ================= -->
+  <div class="site-noise" aria-hidden="true"></div>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <div class="scroll-progress" id="scrollProgress"></div>
 
-    <header>
-        <nav>
+  <header class="site-header" id="top">
+    <a class="brand" href="#home" aria-label="Rijan Shrestha home">
+      <span class="brand-icon">R<span>.</span></span>
+      <span class="brand-name">RIJAN<span>SHRESTHA</span></span>
+    </a>
 
-            <a href="#home" class="logo">Rijan<span>.</span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation"
+      aria-expanded="false" aria-controls="mainNav">
+      <span></span><span></span>
+    </button>
 
-            <div class="nav-links" id="navLinks">
-                <a href="#home">Home</a>
-                <a href="#about">About</a>
-                <a href="#education">Education</a>
-                <a href="#skills">Skills</a>
-                <a href="#projects">Projects</a>
-                <a href="#career">Career</a>
-                <a href="#hobbies">Hobbies</a>
-                <a href="#contact">Contact</a>
-            </div>
+    <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+      <a class="nav-link active" href="#home">Home</a>
+      <a class="nav-link" href="#about">About</a>
+      <a class="nav-link" href="#education">Education</a>
+      <a class="nav-link" href="#skills">Skills</a>
+      <a class="nav-link" href="#projects">Projects</a>
+      <a class="nav-link" href="#career">Career</a>
+      <a class="nav-link" href="#hobbies">Hobbies</a>
+      <a class="nav-link nav-contact" href="#contact">Let's talk <span>↗</span></a>
+    </nav>
+  </header>
 
-            <button class="menu-btn" id="menuBtn">☰</button>
-
-        </nav>
-    </header>
-
-
-    <!-- ================= HOME ================= -->
-
-    <section id="home" class="home">
-
-        <div class="home-content">
-
-            <p class="small-title">WELCOME TO MY PORTFOLIO 👋</p>
-
-            <h1>
-                Hi, I'm <span>Rijan Shrestha</span>
-            </h1>
-
-            <h2>Computer Science Student</h2>
-
-           <p class="home-description">
-    Turning ideas into digital experiences.
-                Exploring technology, coding, and the world of web development.
-</p>
-
-            <div class="home-buttons">
-
-                <a href="#projects" class="btn">
-                    Explore My Work →
-                </a>
-
-                <a href="#contact" class="btn btn-outline">
-                    Contact Me
-                </a>
-
-            </div>
-
+  <main>
+    <!-- HERO -->
+    <section class="hero section-shell" id="home">
+      <div class="hero-copy">
+        <div class="eyebrow reveal">
+          <span class="status-dot"></span>
+          COMPUTER SCIENCE STUDENT <span class="eyebrow-divider">/</span> NEPAL
         </div>
 
-    </section>
-
-
-    <!-- ================= ABOUT ================= -->
-
-    <section id="about">
-
-        <div class="section-title">
-            <p>GET TO KNOW ME</p>
-            <h2>About <span>Me</span></h2>
-        </div>
-
-        <div class="about-card">
-
-            <h3>Who I Am</h3>
-
-            <p>
-                 Hi, I'm Rijan Shrestha, a Computer Science student from Nepal with an
-    interest in programming, web development, and technology. I enjoy
-    creating projects, solving problems with code, and exploring how
-    technology can be used to build useful digital experiences.
-            </p>
-
-            <p>
-                My goal is to keep improving my technical knowledge and
-                eventually build useful and creative technology.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= EDUCATION ================= -->
-
-    <section id="education">
-
-        <div class="section-title">
-            <p>MY ACADEMIC JOURNEY</p>
-            <h2>My <span>Education</span></h2>
-        </div>
-
-        <div class="education-container">
-
-            <div class="education-card">
-
-                <div class="card-icon">🎓</div>
-
-                <h3>Moon Beam Academy</h3>
-
-                <span>Current Education</span>
-
-               <p>
-    Currently studying Computer Science and building a strong foundation
-    in programming, web development, and computer technology.
-</p>
-
-            </div>
-
-
-            <div class="education-card">
-
-                <div class="card-icon">📚</div>
-
-                <h3>Sunsari Garden Academy</h3>
-
-                <span>Grade 10 Completed</span>
-
-               <p>
-    Completed Grade 10 and developed a strong academic foundation
-    before continuing my studies in Computer Science.
-</p>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= SKILLS ================= -->
-
-    <section id="skills">
-
-        <div class="section-title">
-            <p>WHAT I AM LEARNING</p>
-            <h2>My <span>Skills</span></h2>
-        </div>
-
-<p class="section-description">
-    I am developing my skills in programming and web development, with
-    experience learning C, C++, Python, JavaScript, HTML, and CSS through
-    practice and personal projects.
-</p>
-
-        <div class="skills-container">
-
-            <div class="skill-card">
-                <div class="skill-top">
-                    <span>C / C++</span>
-                    <span>75%</span>
-                </div>
-
-                <div class="skill-bar">
-                    <div class="skill-progress" style="width:75%"></div>
-                </div>
-            </div>
-
-
-            <div class="skill-card">
-                <div class="skill-top">
-                    <span>Python</span>
-                    <span>65%</span>
-                </div>
-
-                <div class="skill-bar">
-                    <div class="skill-progress" style="width:65%"></div>
-                </div>
-            </div>
-
-
-            <div class="skill-card">
-                <div class="skill-top">
-                    <span>HTML</span>
-                    <span>85%</span>
-                </div>
-
-                <div class="skill-bar">
-                    <div class="skill-progress" style="width:85%"></div>
-                </div>
-            </div>
-
-
-            <div class="skill-card">
-                <div class="skill-top">
-                    <span>CSS</span>
-                    <span>80%</span>
-                </div>
-
-                <div class="skill-bar">
-                    <div class="skill-progress" style="width:80%"></div>
-                </div>
-            </div>
-
-
-            <div class="skill-card">
-                <div class="skill-top">
-                    <span>JavaScript</span>
-                    <span>60%</span>
-                </div>
-
-                <div class="skill-bar">
-                    <div class="skill-progress" style="width:60%"></div>
-                </div>
-            </div>
-
-
-            <div class="skill-card">
-                <div class="skill-top">
-                    <span>Problem Solving</span>
-                    <span>75%</span>
-                </div>
-
-                <div class="skill-bar">
-                    <div class="skill-progress" style="width:75%"></div>
-                </div>
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= PROJECTS ================= -->
-
-    <section id="projects">
-
-        <div class="section-title">
-            <p>THINGS I AM BUILDING</p>
-            <h2>My <span>Projects</span></h2>
-        </div>
-
-        <div class="projects-container">
-
-
-            <div class="project-card">
-
-                <div class="project-number">01</div>
-
-                <div class="project-icon">🌐</div>
-
-                <h3>Personal Portfolio</h3>
-
-                <p>
-    A responsive personal portfolio website built with HTML, CSS, and
-    JavaScript to showcase my skills, projects, education, and interests.
-</p>
-
-                <span class="project-status">
-                    Learning Project
-                </span>
-
-            </div>
-
-
-            <div class="project-card">
-
-                <div class="project-number">02</div>
-
-                <div class="project-icon">🧮</div>
-
-                <h3>Smart Calculator</h3>
-
-              <p>
-    A learning project using JavaScript to practice calculation logic,
-    user input, and interactive web development.
-</p>
-
-                <span class="project-status">
-                    Learning Project
-                </span>
-
-            </div>
-
-
-            <div class="project-card">
-
-                <div class="project-number">03</div>
-
-                <div class="project-icon">📊</div>
-
-                <h3>Student Result System</h3>
-
-               <p>
-    A project in development for practicing programming logic, data
-    handling, and creating a simple student result management system.
-</p>
-
-                <span class="project-status">
-                    In Development
-                </span>
-
-            </div>
-
-
-            <div class="project-card">
-
-                <div class="project-number">04</div>
-
-                <div class="project-icon">💻</div>
-
-                <h3>Mini Coding Collection</h3>
-
-               <p>
-    A collection of small programs created while learning C, C++,
-    Python, and JavaScript and improving my programming skills.
-</p>
-
-                <span class="project-status">
-                    Learning Project
-                </span>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= CAREER ================= -->
-
-    <section id="career">
-
-        <div class="section-title">
-            <p>WHERE I WANT TO GO</p>
-            <h2>Career <span>Goal</span></h2>
-        </div>
-
-        <div class="career-card">
-
-            <div class="career-icon">🚀</div>
-
-            <h3>My Future Goal</h3>
-
-            <p>
-                To become a skilled software developer and build innovative
-                digital products that solve real-world problems.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= HOBBIES ================= -->
-
-    <section id="hobbies">
-
-        <div class="section-title">
-            <p>WHEN I'M NOT CODING</p>
-            <h2>My <span>Hobbies</span></h2>
-        </div>
-
-        <div class="hobbies-container">
-
-            <div class="hobby-card">
-                <div>💻</div>
-                <h3>Coding</h3>
-                <p>Building things and experimenting with code.</p>
-            </div>
-
-            <div class="hobby-card">
-                <div>🎵</div>
-                <h3>Music</h3>
-                <p>Listening to music and discovering new songs.</p>
-            </div>
-
-            <div class="hobby-card">
-                <div>📖</div>
-                <h3>Reading</h3>
-                <p>Reading books and learning new ideas.</p>
-            </div>
-
-            <div class="hobby-card">
-                <div>🎮</div>
-                <h3>Gaming</h3>
-                <p>Playing games and enjoying competitive challenges.</p>
-            </div>
-
-            <div class="hobby-card">
-                <div>🔬</div>
-                <h3>Technology</h3>
-                <p>Exploring new technologies and digital tools.</p>
-            </div>
-
-            <div class="hobby-card">
-                <div>🧠</div>
-                <h3>Learning</h3>
-                <p>Learning new skills and improving every day.</p>
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= CONTACT ================= -->
-
-    <section id="contact">
-
-        <div class="section-title">
-            <p>GET IN TOUCH</p>
-            <h2>Let's <span>Connect</span></h2>
-        </div>
-
-        <div class="contact-container">
-
-            <div class="contact-info">
-
-                <div class="contact-glow"></div>
-
-                <h3>Have an idea?</h3>
-
-                <p>
-                    Whether you want to connect, talk about technology,
-                    or simply say hello, feel free to reach out.
-                </p>
-
-                <div class="contact-details">
-
-                    <div class="contact-item">
-                        <span>📧</span>
-
-                        <div>
-                            <h4>Email</h4>
-                            <p>rijanshrestha0414@gmail.com</p>
-                        </div>
-                    </div>
-
-
-                    <div class="contact-item">
-    <span>📸</span>
-
-    <div>
-        <h4>Instagram</h4>
-        <p>
-            <a href="https://www.instagram.com/rijanshrestha0228/" target="_blank">
-                @rijanshrestha0228
-            </a>
+        <h1 class="hero-title reveal">
+          Building my<br>
+          <span class="outline-text">digital</span>
+          <span class="gradient-text">universe.</span>
+        </h1>
+
+        <p class="hero-description reveal">
+          Hey, I'm <strong>Rijan Shrestha</strong> — a student exploring
+          code, creative technology, and ideas that can become something real.
         </p>
+
+        <div class="hero-actions reveal">
+          <a class="button button-primary" href="#projects">
+            Explore my work <span>↗</span>
+          </a>
+          <a class="button button-ghost" href="#contact">
+            Connect with me <span>→</span>
+          </a>
+        </div>
+
+        <div class="hero-meta reveal">
+          <div class="meta-item">
+            <span class="meta-label">CURRENT FOCUS</span>
+            <span class="meta-value"><span class="tiny-dot"></span> Learning & building</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">MY APPROACH</span>
+            <span class="meta-value">Curiosity over limits.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal" id="heroVisual">
+        <div class="visual-topline">
+          <span>FIG. 001 — DIGITAL FORM</span>
+          <span class="live-indicator">LIVE <i></i></span>
+        </div>
+
+        <div class="three-stage" id="threeStage" aria-label="Interactive 3D abstract digital sculpture">
+          <canvas id="threeCanvas"></canvas>
+          <div class="three-fallback" id="threeFallback" aria-hidden="true">
+            <div class="fallback-orb">
+              <div class="fallback-ring ring-a"></div>
+              <div class="fallback-ring ring-b"></div>
+              <div class="fallback-core">RS<span>.</span></div>
+            </div>
+          </div>
+          <div class="stage-crosshair crosshair-one"></div>
+          <div class="stage-crosshair crosshair-two"></div>
+          <div class="floating-label label-top">CREATIVE / 001</div>
+          <div class="floating-label label-bottom">DESIGNED TO EXPLORE</div>
+        </div>
+
+        <div class="visual-bottomline">
+          <span>INTERACTIVE ENVIRONMENT</span>
+          <span class="mono">27° 42' N / 85° 19' E</span>
+        </div>
+      </div>
+
+      <a class="scroll-cue" href="#about" aria-label="Scroll to about section">
+        <span class="scroll-line"></span> SCROLL TO EXPLORE <span>↓</span>
+      </a>
+      <div class="hero-index mono">01 — 08</div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="content-section section-shell" id="about">
+      <div class="section-heading reveal">
+        <div>
+          <span class="section-kicker">01 / THE PERSON BEHIND THE CODE</span>
+          <h2>Curious by nature.<br><span class="muted-heading">Builder by choice.</span></h2>
+        </div>
+        <span class="section-side-note">A LITTLE ABOUT ME ↘</span>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-card glass-card reveal tilt-card">
+          <div class="card-corner">ABOUT / RS</div>
+          <div class="about-monogram" aria-hidden="true">R<span>S</span></div>
+          <p class="card-label">HELLO, WORLD!</p>
+          <h3>I'm Rijan.</h3>
+          <p>
+            I'm a Computer Science student from Nepal with an interest in
+            programming, web development, and technology. I enjoy creating
+            projects, solving problems with code, and discovering new ways
+            to turn ideas into useful digital experiences.
+          </p>
+          <p>
+            I'm still learning, experimenting, and improving. Every project
+            is a chance to understand something new and build something better.
+          </p>
+          <div class="about-signature">Always learning<span>.</span></div>
+        </div>
+
+        <div class="about-side">
+          <div class="mini-card glass-card reveal tilt-card">
+            <span class="mini-icon">⌘</span>
+            <span class="card-label">MINDSET</span>
+            <h3>Learn by making.</h3>
+            <p>Small experiments. Real progress. Better ideas.</p>
+          </div>
+          <div class="mini-card glass-card reveal tilt-card">
+            <span class="mini-icon">◎</span>
+            <span class="card-label">INTERESTS</span>
+            <h3>Code meets creativity.</h3>
+            <p>Web experiences, software logic, and emerging technology.</p>
+          </div>
+          <div class="quote-card reveal">
+            <span class="quote-symbol">“</span>
+            <p>The best way to learn technology is to build with it.</p>
+            <span class="quote-caption">MY LEARNING PHILOSOPHY</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section class="content-section section-shell" id="education">
+      <div class="section-heading reveal">
+        <div>
+          <span class="section-kicker">02 / MY ACADEMIC JOURNEY</span>
+          <h2>Learning is a<br><span class="muted-heading">work in progress.</span></h2>
+        </div>
+        <span class="section-side-note">THE FOUNDATION ↘</span>
+      </div>
+
+      <div class="timeline">
+        <article class="timeline-item reveal">
+          <div class="timeline-marker"><span>01</span></div>
+          <div class="timeline-card glass-card tilt-card">
+            <div class="timeline-top">
+              <span class="card-label">CURRENT EDUCATION</span>
+              <span class="timeline-status"><i></i> ONGOING</span>
+            </div>
+            <h3>Moon Beam Academy</h3>
+            <p class="timeline-subtitle">Class 11 · Computer Science</p>
+            <p>Building a foundation in programming, computer technology, and problem-solving while exploring practical projects.</p>
+            <div class="tag-list"><span>Computer Science</span><span>Programming</span><span>Web Development</span></div>
+          </div>
+        </article>
+
+        <article class="timeline-item reveal">
+          <div class="timeline-marker"><span>02</span></div>
+          <div class="timeline-card glass-card tilt-card">
+            <div class="timeline-top">
+              <span class="card-label">PREVIOUS EDUCATION</span>
+              <span class="timeline-status completed"><i></i> COMPLETED</span>
+            </div>
+            <h3>Sunsari Garden Academy</h3>
+            <p class="timeline-subtitle">Grade 10 · SEE</p>
+            <p>Completed Grade 10 and developed an academic foundation before continuing my studies in Computer Science.</p>
+            <div class="tag-list"><span>SEE</span><span>School Education</span><span>Foundation</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section class="content-section section-shell" id="skills">
+      <div class="section-heading reveal">
+        <div>
+          <span class="section-kicker">03 / TOOLS IN MY TOOLKIT</span>
+          <h2>Skills under<br><span class="muted-heading">construction.</span></h2>
+        </div>
+        <span class="section-side-note">LEARNING NEVER STOPS ↘</span>
+      </div>
+
+      <p class="section-intro reveal">
+        These are the technologies and problem-solving skills I'm developing
+        through practice, study, and personal projects.
+      </p>
+
+      <div class="skills-grid">
+        <article class="skill-card glass-card reveal tilt-card" style="--skill-level:75%">
+          <div class="skill-card-top"><span class="skill-symbol">C</span><span class="skill-number">01</span></div>
+          <h3>C / C++</h3><p>Programming fundamentals</p>
+          <div class="skill-meter"><span></span></div><div class="skill-foot"><span>Learning progress</span><span>75%</span></div>
+        </article>
+        <article class="skill-card glass-card reveal tilt-card" style="--skill-level:65%">
+          <div class="skill-card-top"><span class="skill-symbol">Py</span><span class="skill-number">02</span></div>
+          <h3>Python</h3><p>Logic and scripting</p>
+          <div class="skill-meter"><span></span></div><div class="skill-foot"><span>Learning progress</span><span>65%</span></div>
+        </article>
+        <article class="skill-card glass-card reveal tilt-card" style="--skill-level:85%">
+          <div class="skill-card-top"><span class="skill-symbol">&lt;/&gt;</span><span class="skill-number">03</span></div>
+          <h3>HTML</h3><p>Web page structure</p>
+          <div class="skill-meter"><span></span></div><div class="skill-foot"><span>Learning progress</span><span>85%</span></div>
+        </article>
+        <article class="skill-card glass-card reveal tilt-card" style="--skill-level:80%">
+          <div class="skill-card-top"><span class="skill-symbol">#</span><span class="skill-number">04</span></div>
+          <h3>CSS</h3><p>Visual design and layouts</p>
+          <div class="skill-meter"><span></span></div><div class="skill-foot"><span>Learning progress</span><span>80%</span></div>
+        </article>
+        <article class="skill-card glass-card reveal tilt-card" style="--skill-level:60%">
+          <div class="skill-card-top"><span class="skill-symbol">JS</span><span class="skill-number">05</span></div>
+          <h3>JavaScript</h3><p>Interactive experiences</p>
+          <div class="skill-meter"><span></span></div><div class="skill-foot"><span>Learning progress</span><span>60%</span></div>
+        </article>
+        <article class="skill-card glass-card reveal tilt-card" style="--skill-level:75%">
+          <div class="skill-card-top"><span class="skill-symbol">∑</span><span class="skill-number">06</span></div>
+          <h3>Problem Solving</h3><p>Thinking through challenges</p>
+          <div class="skill-meter"><span></span></div><div class="skill-foot"><span>Learning progress</span><span>75%</span></div>
+        </article>
+      </div>
+      <p class="skill-disclaimer reveal">Progress levels are self-assessments, not formal certifications.</p>
+    </section>
+
+    <!-- PROJECTS -->
+    <section class="content-section section-shell" id="projects">
+      <div class="section-heading reveal">
+        <div>
+          <span class="section-kicker">04 / THINGS I'M BUILDING</span>
+          <h2>Ideas becoming<br><span class="muted-heading">real projects.</span></h2>
+        </div>
+        <span class="section-side-note">EXPERIMENT. BUILD. IMPROVE. ↘</span>
+      </div>
+
+      <div class="projects-grid">
+        <article class="project-card project-featured glass-card reveal tilt-card">
+          <div class="project-visual visual-portfolio">
+            <div class="mock-window">
+              <div class="mock-window-bar"><i></i><i></i><i></i><span>rijan.dev / portfolio</span></div>
+              <div class="mock-window-content"><span class="mock-code">const</span> <span>developer</span> = {<br>&nbsp; curiosity: <em>true</em>,<br>&nbsp; learning: <em>"always"</em><br>};
+                <div class="mock-line"></div><div class="mock-line short"></div>
+              </div>
+            </div>
+            <span class="project-visual-index">PROJECT / 01</span>
+          </div>
+          <div class="project-info">
+            <div class="project-topline"><span class="card-label">PERSONAL WEBSITE</span><span class="project-status">● LEARNING PROJECT</span></div>
+            <h3>Personal Portfolio</h3>
+            <p>A responsive personal website to share my skills, projects, education, and interests with the world.</p>
+            <div class="tag-list"><span>HTML</span><span>CSS</span><span>JavaScript</span></div>
+            <a class="text-link" href="https://github.com/Rijan0228" target="_blank" rel="noopener noreferrer">Explore on GitHub <span>↗</span></a>
+          </div>
+        </article>
+
+        <article class="project-card glass-card reveal tilt-card">
+          <div class="project-visual visual-calculator">
+            <div class="calculator-art" aria-hidden="true"><span>+</span><span>−</span><span>×</span><span>÷</span><strong>123</strong><span>=</span></div>
+            <span class="project-visual-index">PROJECT / 02</span>
+          </div>
+          <div class="project-info">
+            <div class="project-topline"><span class="card-label">JAVASCRIPT</span><span class="project-status">● LEARNING</span></div>
+            <h3>Smart Calculator</h3>
+            <p>A learning project for practicing calculation logic, user input, and interactive web development.</p>
+            <div class="tag-list"><span>JavaScript</span><span>Logic</span><span>UI</span></div>
+            <a class="text-link" href="https://github.com/Rijan0228" target="_blank" rel="noopener noreferrer">Explore on GitHub <span>↗</span></a>
+          </div>
+        </article>
+
+        <article class="project-card glass-card reveal tilt-card">
+          <div class="project-visual visual-data">
+            <div class="data-art" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <span class="project-visual-index">PROJECT / 03</span>
+          </div>
+          <div class="project-info">
+            <div class="project-topline"><span class="card-label">APPLICATION</span><span class="project-status status-progress">● IN DEVELOPMENT</span></div>
+            <h3>Student Result System</h3>
+            <p>A project in development to practice programming logic, data handling, and student result management.</p>
+            <div class="tag-list"><span>Programming</span><span>Data</span><span>Logic</span></div>
+            <a class="text-link" href="https://github.com/Rijan0228" target="_blank" rel="noopener noreferrer">Explore on GitHub <span>↗</span></a>
+          </div>
+        </article>
+
+        <article class="project-card glass-card reveal tilt-card">
+          <div class="project-visual visual-terminal">
+            <div class="terminal-art"><div><span>rijan@workspace</span>:~$</div><p>./learning --daily</p><p class="terminal-success">&gt; progress initialized_</p><span class="terminal-cursor"></span></div>
+            <span class="project-visual-index">PROJECT / 04</span>
+          </div>
+          <div class="project-info">
+            <div class="project-topline"><span class="card-label">CODE COLLECTION</span><span class="project-status">● LEARNING PROJECT</span></div>
+            <h3>Mini Coding Collection</h3>
+            <p>A growing collection of small programs in C, C++, Python, and JavaScript.</p>
+            <div class="tag-list"><span>C / C++</span><span>Python</span><span>JavaScript</span></div>
+            <a class="text-link" href="https://github.com/Rijan0228" target="_blank" rel="noopener noreferrer">Explore on GitHub <span>↗</span></a>
+          </div>
+        </article>
+      </div>
+      <a class="button button-ghost projects-more reveal" href="https://github.com/Rijan0228" target="_blank" rel="noopener noreferrer">More on GitHub <span>↗</span></a>
+    </section>
+
+    <!-- CAREER -->
+    <section class="content-section section-shell" id="career">
+      <div class="career-panel reveal">
+        <div class="career-orbit orbit-one"></div>
+        <div class="career-orbit orbit-two"></div>
+        <div class="career-content">
+          <span class="section-kicker">05 / THE ROAD AHEAD</span>
+          <span class="career-icon" aria-hidden="true">↗</span>
+          <h2>Not there yet.<br><span class="gradient-text">Getting closer.</span></h2>
+          <p>
+            My goal is to become a skilled software developer and create
+            innovative digital products that solve real-world problems.
+            For now, I'm focusing on learning the fundamentals, building
+            projects, and staying curious about what's possible.
+          </p>
+          <a class="button button-primary" href="#contact">Let's connect <span>↗</span></a>
+        </div>
+        <div class="career-coordinate mono">FUTURE / IN PROGRESS</div>
+      </div>
+    </section>
+
+    <!-- HOBBIES -->
+    <section class="content-section section-shell" id="hobbies">
+      <div class="section-heading reveal">
+        <div>
+          <span class="section-kicker">06 / BEYOND THE SCREEN</span>
+          <h2>Things that keep<br><span class="muted-heading">me curious.</span></h2>
+        </div>
+        <span class="section-side-note">LIFE OUTSIDE THE EDITOR ↘</span>
+      </div>
+
+      <div class="hobbies-grid">
+        <article class="hobby-card glass-card reveal tilt-card"><span class="hobby-icon">⌘</span><span class="hobby-index">01</span><h3>Coding</h3><p>Building things and experimenting with code.</p><span class="hobby-decoration">0101</span></article>
+        <article class="hobby-card glass-card reveal tilt-card"><span class="hobby-icon">♫</span><span class="hobby-index">02</span><h3>Music</h3><p>Listening to music and discovering new songs.</p><span class="hobby-decoration">♪ ♫</span></article>
+        <article class="hobby-card glass-card reveal tilt-card"><span class="hobby-icon">▤</span><span class="hobby-index">03</span><h3>Reading</h3><p>Reading books and discovering new ideas.</p><span class="hobby-decoration">READ</span></article>
+        <article class="hobby-card glass-card reveal tilt-card"><span class="hobby-icon">◈</span><span class="hobby-index">04</span><h3>Gaming</h3><p>Enjoying games and competitive challenges.</p><span class="hobby-decoration">PLAYER 1</span></article>
+        <article class="hobby-card glass-card reveal tilt-card"><span class="hobby-icon">⌬</span><span class="hobby-index">05</span><h3>Technology</h3><p>Exploring new technologies and digital tools.</p><span class="hobby-decoration">NEXT GEN</span></article>
+        <article class="hobby-card glass-card reveal tilt-card"><span class="hobby-icon">✳</span><span class="hobby-index">06</span><h3>Learning</h3><p>Learning new skills and improving every day.</p><span class="hobby-decoration">LEVEL UP</span></article>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="content-section section-shell contact-section" id="contact">
+      <div class="section-heading reveal">
+        <div>
+          <span class="section-kicker">07 / OPEN A CONNECTION</span>
+          <h2>Have an idea?<br><span class="muted-heading">Let's talk about it.</span></h2>
+        </div>
+        <span class="section-side-note">YOUR MESSAGE IS WELCOME ↘</span>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-details reveal">
+          <p class="section-intro">Whether you want to connect, talk about technology, or share an idea, feel free to reach out.</p>
+
+          <a class="contact-link glass-card" href="mailto:rijanshrestha0414@gmail.com">
+            <span class="contact-icon">✉</span><span><small>EMAIL ME</small><strong>rijanshrestha0414@gmail.com</strong></span><span class="contact-arrow">↗</span>
+          </a>
+          <a class="contact-link glass-card" href="https://www.instagram.com/rijanshrestha0228/" target="_blank" rel="noopener noreferrer">
+            <span class="contact-icon">◎</span><span><small>FOLLOW ALONG</small><strong>@rijanshrestha0228</strong></span><span class="contact-arrow">↗</span>
+          </a>
+          <a class="contact-link glass-card" href="https://github.com/Rijan0228" target="_blank" rel="noopener noreferrer">
+            <span class="contact-icon">⌘</span><span><small>CODE & PROJECTS</small><strong>github.com/Rijan0228</strong></span><span class="contact-arrow">↗</span>
+          </a>
+
+          <div class="location-note"><span class="status-dot"></span> <span>BARAHKSHETRA-6, SUNSARI, NEPAL</span></div>
+        </div>
+
+        <div class="contact-form-card glass-card reveal">
+          <div class="form-heading"><span class="card-label">SEND A MESSAGE</span><span class="form-encryption">FORM / 001</span></div>
+
+          <!-- Existing Formspree endpoint preserved -->
+          <form id="contactForm" action="https://formspree.io/f/mbgjzdjg" method="POST">
+            <input type="hidden" name="_subject" value="New message from Rijan's Portfolio">
+            <div class="honeypot" aria-hidden="true">
+              <label for="website">Leave this field empty</label>
+              <input type="text" id="website" name="_gotcha" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="name">YOUR NAME</label>
+                <input id="name" name="name" type="text" placeholder="What's your name?" autocomplete="name" required maxlength="100">
+              </div>
+              <div class="form-field">
+                <label for="email">YOUR EMAIL</label>
+                <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required maxlength="150">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="subject">SUBJECT</label>
+              <input id="subject" name="subject" type="text" placeholder="What's this about?" required maxlength="150">
+            </div>
+            <div class="form-field">
+              <label for="message">MESSAGE</label>
+              <textarea id="message" name="message" rows="5" placeholder="Write your message here..." required maxlength="5000"></textarea>
+            </div>
+
+            <button class="button button-primary submit-button" type="submit" id="submitButton">
+              <span id="submitLabel">Send message</span><span id="submitArrow">↗</span>
+            </button>
+            <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+            <p class="form-note">Your message is sent through Formspree. Please don't include passwords or other sensitive information.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="brand footer-brand" href="#home"><span class="brand-icon">R<span>.</span></span><span class="brand-name">RIJAN<span>SHRESTHA</span></span></a>
+    <p>Designed with curiosity. Built one line at a time.</p>
+    <div class="footer-links">
+      <a href="https://github.com/Rijan0228" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <a href="https://www.instagram.com/rijanshrestha0228/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+      <a href="mailto:rijanshrestha0414@gmail.com">Email ↗</a>
     </div>
-</div>
+    <div class="footer-bottom"><span>© <span id="currentYear">2026</span> Rijan Shrestha</span><a href="#home">BACK TO TOP ↑</a></div>
+  </footer>
 
-                    <div class="contact-item">
-    <span>💻</span>
-
-    <div>
-        <h4>GitHub</h4>
-        <p>
-            <a href="https://github.com/Rijan0228" target="_blank">
-                github.com/Rijan0228
-            </a>
-        </p>
-    </div>
-</div>
-
-                    <div class="contact-item">
-                        <span>📍</span>
-
-                        <div>
-                            <h4>Location</h4>
-                            <p>Barahakshetra-6, Sunsari, Nepal</p>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- ================= CONTACT FORM ================= -->
-
-            <form
-                class="contact-form"
-                id="contactForm"
-                action="https://formspree.io/f/mbgjzdjg"
-                method="POST"
-            >
-
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    placeholder="Your Name"
-                    required
-                >
-
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="Your Email"
-                    required
-                >
-
-                <textarea
-                    id="message"
-                    name="message"
-                    rows="6"
-                    placeholder="Your Message"
-                    required
-                ></textarea>
-
-                <button type="submit" class="btn">
-                    Send Message 🚀
-                </button>
-
-            </form>
-
-        </div>
-
-    </section>
-
-
-    <!-- ================= FOOTER ================= -->
-
-    <footer>
-
-        <p>
-            © 2026 Rijan Shrestha. Built with HTML, CSS & JavaScript.
-        </p>
-
-    </footer>
-
-
-    <script src="script.js"></script>
-
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
 </body>
-
 </html>
