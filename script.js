@@ -1,625 +1,787 @@
-
-// =========================================================
-// RIJAN SHRESTHA — PORTFOLIO INTERACTION ENGINE
-// Three.js scene, scroll reveals, navigation and contact form
-// =========================================================
-
 "use strict";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const $ = (selector, root = document) => root.querySelector(selector);
-  const $$ = (selector, root = document) =>
-    Array.from(root.querySelectorAll(selector));
+/* =========================================================
+   RIJAN SHRESTHA — CYBERPUNK PORTFOLIO ENGINE
+   ========================================================= */
 
-  const reducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
+const $ = (selector, parent = document) => parent.querySelector(selector);
+const $$ = (selector, parent = document) =>
+  Array.from(parent.querySelectorAll(selector));
 
-  const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+const reduceMotion = window.matchMedia(
+  "(prefers-reduced-motion: reduce)"
+).matches;
 
-  // -------------------------------------------------------
-  // LOADING SCREEN
-  // -------------------------------------------------------
+const finePointer = window.matchMedia(
+  "(hover: hover) and (pointer: fine)"
+).matches;
 
-  const loader = $("#pageLoader");
+/* ---------- PRELOADER ---------- */
 
-  function finishLoading() {
-    if (loader) loader.classList.add("loaded");
-    document.body.classList.add("page-ready");
+window.addEventListener("load", () => {
+  window.setTimeout(() => {
+    $("#preloader")?.classList.add("loaded");
+  }, reduceMotion ? 0 : 800);
+});
+
+/* ---------- FOOTER YEAR ---------- */
+
+const yearElement = $("#year");
+if (yearElement) yearElement.textContent = new Date().getFullYear();
+
+/* ---------- MOBILE NAVIGATION ---------- */
+
+const menuToggle = $("#menu-toggle");
+const mainNav = $("#main-nav");
+
+function closeMenu() {
+  menuToggle?.setAttribute("aria-expanded", "false");
+  menuToggle?.setAttribute("aria-label", "Open navigation");
+  mainNav?.classList.remove("open");
+  document.body.classList.remove("menu-open");
+}
+
+menuToggle?.addEventListener("click", () => {
+  const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+
+  menuToggle.setAttribute("aria-expanded", String(!isOpen));
+  menuToggle.setAttribute(
+    "aria-label",
+    isOpen ? "Open navigation" : "Close navigation"
+  );
+
+  mainNav?.classList.toggle("open", !isOpen);
+  document.body.classList.toggle("menu-open", !isOpen);
+});
+
+$$(".nav-link").forEach((link) => {
+  link.addEventListener("click", closeMenu);
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeMenu();
+});
+
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 760) closeMenu();
+});
+
+/* ---------- SCROLL PROGRESS ---------- */
+
+let scrollTicking = false;
+
+function updateScrollProgress() {
+  const scrollableHeight =
+    document.documentElement.scrollHeight - window.innerHeight;
+
+  const progress = scrollableHeight > 0
+    ? (window.scrollY / scrollableHeight) * 100
+    : 0;
+
+  const progressBar = $("#progress-bar");
+  if (progressBar) {
+    progressBar.style.width = `${Math.min(100, progress)}%`;
   }
 
-  window.addEventListener("load", () => {
-    window.setTimeout(finishLoading, reducedMotion ? 0 : 450);
-  }, { once: true });
+  scrollTicking = false;
+}
 
-  // Safety fallback if a remote resource takes too long.
-  window.setTimeout(finishLoading, 2500);
-
-  // -------------------------------------------------------
-  // CURRENT YEAR
-  // -------------------------------------------------------
-
-  const year = $("#currentYear");
-  if (year) year.textContent = new Date().getFullYear();
-
-  // -------------------------------------------------------
-  // MOBILE NAVIGATION
-  // -------------------------------------------------------
-
-  const menuToggle = $("#menuToggle");
-  const mainNav = $("#mainNav");
-  const navLinks = $$(".nav-link");
-
-  function closeMenu() {
-    if (!menuToggle || !mainNav) return;
-
-    menuToggle.setAttribute("aria-expanded", "false");
-    menuToggle.setAttribute("aria-label", "Open navigation");
-    mainNav.classList.remove("open");
-    document.body.classList.remove("menu-open");
-  }
-
-  if (menuToggle && mainNav) {
-    menuToggle.addEventListener("click", () => {
-      const opening = menuToggle.getAttribute("aria-expanded") !== "true";
-
-      menuToggle.setAttribute("aria-expanded", String(opening));
-      menuToggle.setAttribute(
-        "aria-label",
-        opening ? "Close navigation" : "Open navigation"
-      );
-      mainNav.classList.toggle("open", opening);
-      document.body.classList.toggle("menu-open", opening);
-    });
-
-    navLinks.forEach(link => link.addEventListener("click", closeMenu));
-
-    document.addEventListener("keydown", event => {
-      if (event.key === "Escape") closeMenu();
-    });
-
-    document.addEventListener("click", event => {
-      if (
-        mainNav.classList.contains("open") &&
-        !mainNav.contains(event.target) &&
-        !menuToggle.contains(event.target)
-      ) {
-        closeMenu();
-      }
-    });
-
-    window.addEventListener("resize", () => {
-      if (window.innerWidth > 820) closeMenu();
-    });
-  }
-
-  // -------------------------------------------------------
-  // SCROLL PROGRESS, BACK-TO-TOP AND ACTIVE NAV
-  // -------------------------------------------------------
-
-  const progressBar = $("#scrollProgress");
-  const backToTop = $("#backToTop");
-  let scrollTicking = false;
-
-  function updateScrollUI() {
-    const scrollable =
-      document.documentElement.scrollHeight - window.innerHeight;
-
-    const progress = scrollable > 0
-      ? (window.scrollY / scrollable) * 100
-      : 0;
-
-    if (progressBar) progressBar.style.width = `${progress}%`;
-
-    if (backToTop) {
-      backToTop.classList.toggle("visible", window.scrollY > 500);
-    }
-
-    scrollTicking = false;
-  }
-
-  window.addEventListener("scroll", () => {
+window.addEventListener(
+  "scroll",
+  () => {
     if (!scrollTicking) {
+      window.requestAnimationFrame(updateScrollProgress);
       scrollTicking = true;
-      window.requestAnimationFrame(updateScrollUI);
     }
-  }, { passive: true });
+  },
+  { passive: true }
+);
 
-  updateScrollUI();
+updateScrollProgress();
 
-  if (backToTop) {
-    backToTop.addEventListener("click", () => {
-      window.scrollTo({
-        top: 0,
-        behavior: reducedMotion ? "auto" : "smooth"
-      });
-    });
-  }
+/* ---------- SCROLL REVEALS ---------- */
 
-  const sections = $$("main section[id]");
+const revealElements = $$(".reveal");
 
-  if ("IntersectionObserver" in window) {
-    const sectionObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
+if ("IntersectionObserver" in window && !reduceMotion) {
+  const revealObserver = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
 
-        const activeId = entry.target.id;
+        entry.target.classList.add("in-view");
+        observer.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -25px 0px" }
+  );
 
-        navLinks.forEach(link => {
-          const isActive = link.getAttribute("href") === `#${activeId}`;
+  revealElements.forEach((element) => revealObserver.observe(element));
+} else {
+  revealElements.forEach((element) => element.classList.add("in-view"));
+}
 
-          link.classList.toggle("active", isActive);
+/* ---------- ACTIVE NAVIGATION ---------- */
 
-          if (isActive) {
+const sections = $$("main section[id]");
+const navLinks = $$(".nav-link");
+
+if ("IntersectionObserver" in window) {
+  const sectionObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+
+        navLinks.forEach((link) => {
+          const active = link.getAttribute("href") === `#${entry.target.id}`;
+
+          link.classList.toggle("active", active);
+
+          if (active) {
             link.setAttribute("aria-current", "location");
           } else {
             link.removeAttribute("aria-current");
           }
         });
       });
-    }, {
-      rootMargin: "-25% 0px -60% 0px",
-      threshold: 0
-    });
+    },
+    { rootMargin: "-25% 0px -60% 0px", threshold: 0 }
+  );
 
-    sections.forEach(section => sectionObserver.observe(section));
-  }
+  sections.forEach((section) => sectionObserver.observe(section));
+}
 
-  // -------------------------------------------------------
-  // SCROLL-REVEAL ANIMATIONS
-  // -------------------------------------------------------
+/* ---------- ANIMATED SKILL BARS ---------- */
 
-  const revealElements = $$(".reveal");
+$$(".skill-card").forEach((card) => {
+  const percentage = Number(card.dataset.skill);
+  const bar = $(".skill-track span", card);
 
-  if (reducedMotion || !("IntersectionObserver" in window)) {
-    revealElements.forEach(element => element.classList.add("is-visible"));
-  } else {
-    const revealObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
+  if (!bar || !Number.isFinite(percentage)) return;
+
+  bar.style.setProperty(
+    "--skill-width",
+    `${Math.max(0, Math.min(100, percentage))}%`
+  );
+});
+
+if ("IntersectionObserver" in window && !reduceMotion) {
+  const skillObserver = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
 
-        entry.target.classList.add("is-visible");
+        entry.target.classList.add("in-view");
         observer.unobserve(entry.target);
       });
-    }, {
-      threshold: 0.12,
-      rootMargin: "0px 0px -35px 0px"
-    });
+    },
+    { threshold: 0.25 }
+  );
 
-    revealElements.forEach(element => revealObserver.observe(element));
-  }
+  $$(".skill-card").forEach((card) => skillObserver.observe(card));
+} else {
+  $$(".skill-card").forEach((card) => card.classList.add("in-view"));
+}
 
-  // -------------------------------------------------------
-  // 3D CARD TILT
-  // -------------------------------------------------------
+/* ---------- CINEMATIC TYPING EFFECT ---------- */
 
-  if (!reducedMotion && !coarsePointer) {
-    $$(".tilt-card").forEach(card => {
-      let rect = null;
+const roleElement = $("#typed-role");
 
-      card.addEventListener("pointerenter", () => {
-        rect = card.getBoundingClientRect();
-      });
+const roles = [
+  "Computer Science Student",
+  "Aspiring Software Developer",
+  "Web Development Learner",
+  "Creative Problem Solver"
+];
 
-      card.addEventListener("pointermove", event => {
-        if (event.pointerType !== "mouse") return;
+if (roleElement) {
+  if (reduceMotion) {
+    roleElement.textContent = roles[0];
+  } else {
+    let roleIndex = 0;
+    let characterIndex = roles[0].length;
+    let deleting = false;
 
-        rect = rect || card.getBoundingClientRect();
+    function typeRole() {
+      const currentRole = roles[roleIndex];
 
-        const x = (event.clientX - rect.left) / rect.width;
-        const y = (event.clientY - rect.top) / rect.height;
-
-        const rotateY = (x - 0.5) * 5;
-        const rotateX = (0.5 - y) * 5;
-
-        card.style.transform =
-          `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-3px)`;
-      });
-
-      card.addEventListener("pointerleave", () => {
-        card.style.transform = "";
-        rect = null;
-      });
-    });
-  }
-
-  // -------------------------------------------------------
-  // HERO POINTER PARALLAX
-  // -------------------------------------------------------
-
-  const heroVisual = $("#heroVisual");
-
-  if (heroVisual && !reducedMotion && !coarsePointer) {
-    let frame = 0;
-    let targetX = 0;
-    let targetY = 0;
-
-    heroVisual.addEventListener("pointermove", event => {
-      const rect = heroVisual.getBoundingClientRect();
-
-      targetX = ((event.clientX - rect.left) / rect.width - 0.5) * 8;
-      targetY = ((event.clientY - rect.top) / rect.height - 0.5) * -8;
-
-      if (frame) return;
-
-      frame = window.requestAnimationFrame(() => {
-        heroVisual.style.setProperty("--pointer-x", `${targetX}px`);
-        heroVisual.style.setProperty("--pointer-y", `${targetY}px`);
-        frame = 0;
-      });
-    });
-
-    heroVisual.addEventListener("pointerleave", () => {
-      heroVisual.style.setProperty("--pointer-x", "0px");
-      heroVisual.style.setProperty("--pointer-y", "0px");
-    });
-  }
-
-  // -------------------------------------------------------
-  // THREE.JS INTERACTIVE 3D SCENE
-  // -------------------------------------------------------
-
-  function initThreeScene() {
-    const stage = $("#threeStage");
-    const canvas = $("#threeCanvas");
-    const fallback = $("#threeFallback");
-
-    if (!stage || !canvas || !window.THREE) return;
-
-    const THREE = window.THREE;
-    let renderer;
-    let scene;
-    let camera;
-    let sculpture;
-    let innerCore;
-    let particles;
-    let particleGeometry;
-    let particleMaterial;
-    let animationFrame = 0;
-    let resizeObserver;
-    let disposed = false;
-
-    const pointer = { x: 0, y: 0 };
-    const targetRotation = { x: 0, y: 0 };
-
-    try {
-      renderer = new THREE.WebGLRenderer({
-        canvas,
-        alpha: true,
-        antialias: !coarsePointer,
-        powerPreference: "low-power"
-      });
-
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
-      renderer.setClearColor(0x000000, 0);
-      renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-      scene = new THREE.Scene();
-
-      camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
-      camera.position.set(0, 0, 7);
-
-      // The main object: a sculptural, wireframe torus knot.
-      sculpture = new THREE.Group();
-      scene.add(sculpture);
-
-      const knotGeometry = new THREE.TorusKnotGeometry(
-        1.03, 0.29, 180, 16, 2, 3
-      );
-
-      const knotMaterial = new THREE.MeshStandardMaterial({
-        color: 0x00ffc3,
-        metalness: 0.72,
-        roughness: 0.24,
-        emissive: 0x003c31,
-        emissiveIntensity: 0.75,
-        wireframe: true
-      });
-
-      const knot = new THREE.Mesh(knotGeometry, knotMaterial);
-      sculpture.add(knot);
-
-      // A bright inner form gives the object depth.
-      const coreGeometry = new THREE.IcosahedronGeometry(0.49, 2);
-      const coreMaterial = new THREE.MeshStandardMaterial({
-        color: 0x93ffe3,
-        emissive: 0x00a87e,
-        emissiveIntensity: 0.65,
-        metalness: 0.5,
-        roughness: 0.22,
-        flatShading: true
-      });
-
-      innerCore = new THREE.Mesh(coreGeometry, coreMaterial);
-      sculpture.add(innerCore);
-
-      // Fine orbital rings.
-      const ringMaterial = new THREE.MeshBasicMaterial({
-        color: 0x678dff,
-        transparent: true,
-        opacity: 0.75
-      });
-
-      const ringOne = new THREE.Mesh(
-        new THREE.TorusGeometry(1.75, 0.007, 6, 180),
-        ringMaterial
-      );
-      ringOne.rotation.set(1.05, 0.35, 0.2);
-      sculpture.add(ringOne);
-
-      const ringTwo = new THREE.Mesh(
-        new THREE.TorusGeometry(2.02, 0.005, 6, 180),
-        new THREE.MeshBasicMaterial({
-          color: 0x00ffc3,
-          transparent: true,
-          opacity: 0.4
-        })
-      );
-      ringTwo.rotation.set(0.35, 1.15, 0.7);
-      sculpture.add(ringTwo);
-
-      // Small points of light orbit the central form.
-      const particleCount = coarsePointer ? 360 : 750;
-      const positions = new Float32Array(particleCount * 3);
-
-      for (let i = 0; i < particleCount; i++) {
-        const radius = 2.2 + Math.random() * 2.3;
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.acos(2 * Math.random() - 1);
-
-        positions[i * 3] =
-          radius * Math.sin(phi) * Math.cos(theta);
-        positions[i * 3 + 1] =
-          radius * Math.sin(phi) * Math.sin(theta);
-        positions[i * 3 + 2] =
-          radius * Math.cos(phi);
-      }
-
-      particleGeometry = new THREE.BufferGeometry();
-      particleGeometry.setAttribute(
-        "position",
-        new THREE.BufferAttribute(positions, 3)
-      );
-
-      particleMaterial = new THREE.PointsMaterial({
-        color: 0x8cffe3,
-        size: 0.018,
-        transparent: true,
-        opacity: 0.8,
-        sizeAttenuation: true
-      });
-
-      particles = new THREE.Points(particleGeometry, particleMaterial);
-      scene.add(particles);
-
-      // Lighting.
-      scene.add(new THREE.AmbientLight(0x7bffe1, 1.2));
-
-      const keyLight = new THREE.PointLight(0x00ffc3, 36, 15);
-      keyLight.position.set(3, 2, 4);
-      scene.add(keyLight);
-
-      const blueLight = new THREE.PointLight(0x678dff, 25, 15);
-      blueLight.position.set(-3, -2, 2);
-      scene.add(blueLight);
-
-      const rimLight = new THREE.PointLight(0xffffff, 10, 12);
-      rimLight.position.set(0, 3, -3);
-      scene.add(rimLight);
-
-      function resizeScene() {
-        if (disposed) return;
-
-        const width = stage.clientWidth;
-        const height = stage.clientHeight;
-
-        if (!width || !height) return;
-
-        renderer.setSize(width, height, false);
-        camera.aspect = width / height;
-        camera.position.z = width < 420 ? 8 : width < 700 ? 7.4 : 6.8;
-        camera.updateProjectionMatrix();
-      }
-
-      if ("ResizeObserver" in window) {
-        resizeObserver = new ResizeObserver(resizeScene);
-        resizeObserver.observe(stage);
+      if (deleting) {
+        characterIndex--;
       } else {
-        window.addEventListener("resize", resizeScene);
+        characterIndex++;
       }
 
-      resizeScene();
+      roleElement.textContent = currentRole.slice(
+        0,
+        Math.max(0, characterIndex)
+      );
 
-      if (fallback) fallback.style.display = "none";
-      canvas.style.visibility = "visible";
+      let delay = deleting ? 35 : 65;
 
-      if (!reducedMotion) {
-        stage.addEventListener("pointermove", event => {
-          if (event.pointerType !== "mouse") return;
-
-          const rect = stage.getBoundingClientRect();
-          pointer.x = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
-          pointer.y = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
-        });
-
-        stage.addEventListener("pointerleave", () => {
-          pointer.x = 0;
-          pointer.y = 0;
-        });
+      if (!deleting && characterIndex >= currentRole.length) {
+        deleting = true;
+        delay = 1500;
+      } else if (deleting && characterIndex <= 0) {
+        deleting = false;
+        roleIndex = (roleIndex + 1) % roles.length;
+        delay = 300;
       }
 
-      const clock = new THREE.Clock();
+      window.setTimeout(typeRole, delay);
+    }
 
-      function animate() {
-        if (disposed) return;
+    window.setTimeout(typeRole, 1400);
+  }
+}
 
-        animationFrame = window.requestAnimationFrame(animate);
+/* ---------- POINTER GLOW ---------- */
 
-        // Pause expensive rendering while the scene is off-screen.
-        if (document.hidden || !stage.getClientRects().length) return;
+const cursorGlow = $(".cursor-glow");
 
-        const elapsed = clock.getElapsedTime();
+if (cursorGlow && finePointer && !reduceMotion) {
+  window.addEventListener(
+    "pointermove",
+    (event) => {
+      cursorGlow.style.left = `${event.clientX}px`;
+      cursorGlow.style.top = `${event.clientY}px`;
+    },
+    { passive: true }
+  );
+}
 
-        if (!reducedMotion) {
-          sculpture.rotation.y +=
-            (pointer.x * 0.3 - sculpture.rotation.y) * 0.018 + 0.002;
+/* ---------- INTERACTIVE 3D HOLOGRAM TILT ---------- */
 
-          targetRotation.x = -pointer.y * 0.22;
-          sculpture.rotation.x +=
-            (targetRotation.x - sculpture.rotation.x) * 0.025;
+const heroVisual = $(".hero-visual");
 
-          innerCore.rotation.x = elapsed * 0.16;
-          innerCore.rotation.y = elapsed * 0.23;
-          particles.rotation.y = elapsed * 0.018;
-          particles.rotation.x = Math.sin(elapsed * 0.12) * 0.08;
-        }
+if (heroVisual && finePointer && !reduceMotion) {
+  heroVisual.addEventListener("pointermove", (event) => {
+    const bounds = heroVisual.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) / bounds.width;
+    const y = (event.clientY - bounds.top) / bounds.height;
 
-        const pulse = reducedMotion ? 1 : 1 + Math.sin(elapsed * 1.3) * 0.025;
-        sculpture.scale.setScalar(pulse);
+    const rotateY = (x - 0.5) * 9;
+    const rotateX = (0.5 - y) * 7;
 
-        renderer.render(scene, camera);
-      }
+    heroVisual.style.transform =
+      `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  });
 
-      animate();
+  heroVisual.addEventListener("pointerleave", () => {
+    heroVisual.style.transform =
+      "perspective(1000px) rotateX(0deg) rotateY(0deg)";
+  });
+}
 
-      // Pause/resume rendering as the page is hidden or restored.
-      const onVisibilityChange = () => {
-        if (!document.hidden && !disposed && !animationFrame) animate();
-      };
+/* ---------- CONTACT FORM FEEDBACK ---------- */
+/*
+  The form posts directly to your original Formspree endpoint.
+  Do not show a fake success message before Formspree confirms
+  that the submission was accepted.
+*/
 
-      document.addEventListener("visibilitychange", onVisibilityChange);
+const contactForm = $("#contact-form");
+const formNote = $("#form-note");
 
-      // Clean up WebGL resources if the page is leaving.
-      window.addEventListener("pagehide", () => {
-        disposed = true;
-        if (animationFrame) cancelAnimationFrame(animationFrame);
-        if (resizeObserver) resizeObserver.disconnect();
-        else window.removeEventListener("resize", resizeScene);
+contactForm?.addEventListener("submit", () => {
+  if (!contactForm.reportValidity()) return;
 
-        document.removeEventListener("visibilitychange", onVisibilityChange);
+  if (formNote) {
+    formNote.textContent =
+      "Transmitting message… Your browser will submit it to Formspree.";
+  }
 
-        knotGeometry.dispose();
-        knotMaterial.dispose();
-        coreGeometry.dispose();
-        coreMaterial.dispose();
-        ringMaterial.dispose();
-        particleGeometry.dispose();
-        particleMaterial.dispose();
-        renderer.dispose();
-      }, { once: true });
+  const submitButton = $(".submit-button", contactForm);
+  if (submitButton) {
+    submitButton.setAttribute("aria-busy", "true");
+  }
+});
 
-    } catch (error) {
-      console.warn("3D scene unavailable; using the CSS fallback.", error);
+/* ---------- CYBERPUNK CITY: THREE.JS ---------- */
 
-      if (renderer) renderer.dispose();
-      if (canvas) canvas.style.display = "none";
-      if (fallback) fallback.style.display = "grid";
+async function startCyberpunkCity() {
+  const canvas = $("#city-canvas");
+  if (!canvas) return;
+
+  // Load Three.js dynamically so the rest of the site still works
+  // if the external library is unavailable.
+  const THREE = await import(
+    "https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js"
+  );
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color("#050611");
+  scene.fog = new THREE.FogExp2("#07091b", 0.014);
+
+  const camera = new THREE.PerspectiveCamera(
+    55,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    220
+  );
+
+  camera.position.set(0, 5, 19);
+  camera.lookAt(0, 3, -10);
+
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: window.devicePixelRatio < 2,
+    alpha: false,
+    powerPreference: "low-power"
+  });
+
+  renderer.setPixelRatio(
+    Math.min(window.devicePixelRatio || 1, 1.6)
+  );
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  if ("ACESFilmicToneMapping" in THREE) {
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+  }
+
+  scene.add(new THREE.AmbientLight("#7185c9", 1.2));
+
+  const cyanLight = new THREE.PointLight("#00f5ff", 28, 45);
+  cyanLight.position.set(-7, 8, -5);
+  scene.add(cyanLight);
+
+  const pinkLight = new THREE.PointLight("#ff35d3", 22, 40);
+  pinkLight.position.set(8, 6, -10);
+  scene.add(pinkLight);
+
+  const cityGroup = new THREE.Group();
+  scene.add(cityGroup);
+
+  const cyanMaterial = new THREE.MeshBasicMaterial({
+    color: "#00f5ff",
+    transparent: true,
+    opacity: 0.8
+  });
+
+  const pinkMaterial = new THREE.MeshBasicMaterial({
+    color: "#ff35d3",
+    transparent: true,
+    opacity: 0.8
+  });
+
+  const buildingMaterials = [
+    new THREE.MeshStandardMaterial({
+      color: "#10162e",
+      metalness: 0.7,
+      roughness: 0.48,
+      emissive: "#080d20",
+      emissiveIntensity: 0.7
+    }),
+    new THREE.MeshStandardMaterial({
+      color: "#17112e",
+      metalness: 0.65,
+      roughness: 0.45,
+      emissive: "#100820",
+      emissiveIntensity: 0.6
+    }),
+    new THREE.MeshStandardMaterial({
+      color: "#0d2232",
+      metalness: 0.6,
+      roughness: 0.5,
+      emissive: "#071523",
+      emissiveIntensity: 0.65
+    })
+  ];
+
+  const random = (min, max) => min + Math.random() * (max - min);
+
+  // Create a dense skyline of geometric buildings.
+  const buildingCount = window.innerWidth < 600 ? 48 : 88;
+
+  for (let i = 0; i < buildingCount; i++) {
+    const width = random(0.65, 1.8);
+    const height = random(2.5, 12);
+    const depth = random(0.7, 1.9);
+
+    const x = (random(-1, 1) * 1.1) +
+      (Math.random() < 0.5 ? -1 : 1) * random(5, 25);
+
+    const z = random(-35, 7);
+
+    const geometry = new THREE.BoxGeometry(width, height, depth);
+    const building = new THREE.Mesh(
+      geometry,
+      buildingMaterials[Math.floor(Math.random() * buildingMaterials.length)]
+    );
+
+    building.position.set(x, height / 2 - 0.2, z);
+    cityGroup.add(building);
+
+    // Neon roof outlines.
+    const edgeGeometry = new THREE.EdgesGeometry(geometry);
+    const edge = new THREE.LineSegments(
+      edgeGeometry,
+      Math.random() > 0.65 ? pinkMaterial : cyanMaterial
+    );
+
+    edge.position.copy(building.position);
+    edge.material = edge.material.clone();
+    edge.material.opacity = random(0.18, 0.65);
+    cityGroup.add(edge);
+
+    // A few glowing vertical sign strips.
+    if (Math.random() > 0.35) {
+      const signGeometry = new THREE.BoxGeometry(
+        0.035,
+        random(0.8, Math.min(height, 3.5)),
+        0.035
+      );
+
+      const sign = new THREE.Mesh(
+        signGeometry,
+        Math.random() > 0.5 ? cyanMaterial : pinkMaterial
+      );
+
+      sign.position.set(
+        x + (Math.random() > 0.5 ? width * 0.3 : -width * 0.3),
+        random(0.8, height - 0.3),
+        z + depth / 2 + 0.025
+      );
+
+      cityGroup.add(sign);
     }
   }
 
-  // Wait until layout dimensions are available before creating WebGL.
-  if ("requestAnimationFrame" in window) {
-    window.requestAnimationFrame(initThreeScene);
-  } else {
-    initThreeScene();
+  // Futuristic grid floor.
+  const grid = new THREE.GridHelper(
+    90,
+    90,
+    new THREE.Color("#00f5ff"),
+    new THREE.Color("#25305b")
+  );
+
+  grid.position.set(0, -0.15, -10);
+  grid.material.transparent = true;
+  grid.material.opacity = 0.32;
+  scene.add(grid);
+
+  // Holographic rings hovering above the skyline.
+  const hologram = new THREE.Group();
+  hologram.position.set(0, 4.8, -9);
+  scene.add(hologram);
+
+  const ringConfigs = [
+    { radius: 2.6, tube: 0.018, color: "#00f5ff" },
+    { radius: 2.1, tube: 0.013, color: "#ff35d3" },
+    { radius: 1.55, tube: 0.012, color: "#8b5cff" }
+  ];
+
+  const rings = [];
+
+  ringConfigs.forEach((config, index) => {
+    const ringGeometry = new THREE.TorusGeometry(
+      config.radius,
+      config.tube,
+      8,
+      120
+    );
+
+    const ringMaterial = new THREE.MeshBasicMaterial({
+      color: config.color,
+      transparent: true,
+      opacity: 0.78
+    });
+
+    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+
+    ring.rotation.x = Math.PI / 2 + index * 0.32;
+    ring.rotation.y = index * 0.42;
+
+    hologram.add(ring);
+    rings.push(ring);
+  });
+
+  // Floating particles / distant city lights.
+  const particleCount = window.innerWidth < 600 ? 650 : 1400;
+  const particlePositions = new Float32Array(particleCount * 3);
+
+  for (let i = 0; i < particleCount; i++) {
+    particlePositions[i * 3] = random(-38, 38);
+    particlePositions[i * 3 + 1] = random(0, 23);
+    particlePositions[i * 3 + 2] = random(-40, 12);
   }
 
-  // -------------------------------------------------------
-  // FORM VALIDATION AND FORMSPREE SUBMISSION
-  // -------------------------------------------------------
+  const particleGeometry = new THREE.BufferGeometry();
+  particleGeometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(particlePositions, 3)
+  );
 
-  const contactForm = $("#contactForm");
-  const formStatus = $("#formStatus");
-  const submitButton = $("#submitButton");
-  const submitLabel = $("#submitLabel");
-  const submitArrow = $("#submitArrow");
+  const particleMaterial = new THREE.PointsMaterial({
+    color: "#9efaff",
+    size: 0.055,
+    transparent: true,
+    opacity: 0.7,
+    depthWrite: false
+  });
 
-  function showFormStatus(message, type) {
-    if (!formStatus) return;
+  const particles = new THREE.Points(particleGeometry, particleMaterial);
+  scene.add(particles);
 
-    formStatus.textContent = message;
-    formStatus.className = `form-status visible ${type}`;
+  // The camera smoothly follows the mouse without hijacking page scrolling.
+  let targetX = 0;
+  let targetY = 0;
+  let currentX = 0;
+  let currentY = 0;
+  let animationFrame = 0;
+  let lastFrame = 0;
+
+  if (finePointer && !reduceMotion) {
+    window.addEventListener(
+      "pointermove",
+      (event) => {
+        targetX = (event.clientX / window.innerWidth - 0.5) * 2;
+        targetY = (event.clientY / window.innerHeight - 0.5) * 2;
+      },
+      { passive: true }
+    );
   }
 
-  if (contactForm) {
-    contactForm.addEventListener("submit", async event => {
-      event.preventDefault();
+  function resizeRenderer() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
-      if (!contactForm.reportValidity()) return;
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
 
-      // Basic anti-spam honeypot.
-      const honeypot = $('[name="_gotcha"]', contactForm);
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio || 1, 1.6)
+    );
+  }
 
-      if (honeypot && honeypot.value.trim() !== "") {
-        showFormStatus("Thanks! Your message has been received.", "success");
-        contactForm.reset();
-        return;
-      }
+  window.addEventListener("resize", resizeRenderer, { passive: true });
 
-      const endpoint = contactForm.getAttribute("action");
+  function animate(time) {
+    animationFrame = window.requestAnimationFrame(animate);
 
-      if (!endpoint || !endpoint.startsWith("https://formspree.io/f/")) {
-        showFormStatus(
-          "The contact form endpoint is missing or invalid. Please contact me by email.",
-          "error"
-        );
-        return;
-      }
+    // Limit unnecessary rendering when the tab is not visible.
+    if (document.hidden) return;
 
-      const originalLabel = submitLabel ? submitLabel.textContent : "Send message";
+    // Cap frame rate on high-refresh-rate displays to reduce GPU use.
+    if (time - lastFrame < 24) return;
+    lastFrame = time;
 
-      if (submitButton) submitButton.disabled = true;
-      if (submitLabel) submitLabel.textContent = "Sending...";
-      if (submitArrow) submitArrow.textContent = "…";
+    const seconds = time * 0.001;
 
-      if (formStatus) {
-        formStatus.textContent = "";
-        formStatus.className = "form-status";
-      }
+    if (!reduceMotion) {
+      currentX += (targetX - currentX) * 0.035;
+      currentY += (targetY - currentY) * 0.035;
 
-      try {
-        const response = await fetch(endpoint, {
-          method: "POST",
-          body: new FormData(contactForm),
-          headers: { "Accept": "application/json" }
-        });
+      camera.position.x = currentX * 1.5;
+      camera.position.y = 5 - currentY * 0.8;
+      camera.lookAt(currentX * 0.5, 3, -10);
 
-        let result = {};
+      hologram.rotation.y = seconds * 0.16;
+      hologram.rotation.z = Math.sin(seconds * 0.35) * 0.12;
 
-        try {
-          result = await response.json();
-        } catch (_) {
-          result = {};
-        }
+      rings.forEach((ring, index) => {
+        ring.rotation.z += (index % 2 ? -1 : 1) * 0.0015;
+      });
 
-        if (!response.ok) {
-          const detail = Array.isArray(result.errors)
-            ? result.errors.map(item => item.message).filter(Boolean).join(" ")
-            : "";
+      particles.rotation.y = Math.sin(seconds * 0.07) * 0.035;
+      grid.position.z = -10 + Math.sin(seconds * 0.14) * 0.15;
+    }
 
-          throw new Error(
-            detail || "The message could not be sent. Please try again."
-          );
-        }
+    renderer.render(scene, camera);
+  }
 
-        contactForm.reset();
+  animate(0);
 
-        showFormStatus(
-          "Message sent successfully! Thanks for reaching out. ✨",
-          "success"
-        );
-      } catch (error) {
-        console.error("Contact form submission failed:", error);
+  // Stop the animation loop when the page is being hidden.
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && !animationFrame) animate(0);
+  });
 
-        showFormStatus(
-          "We couldn't confirm delivery. Check your connection and try again, or email rijanshrestha0414@gmail.com directly.",
-          "error"
-        );
-      } finally {
-        if (submitButton) submitButton.disabled = false;
-        if (submitLabel) submitLabel.textContent = originalLabel;
-        if (submitArrow) submitArrow.textContent = "↗";
+  window.addEventListener("pagehide", () => {
+    window.cancelAnimationFrame(animationFrame);
+    renderer.dispose();
+    particleGeometry.dispose();
+    particleMaterial.dispose();
+  });
+}
+
+/* ---------- LIGHTWEIGHT 2D FALLBACK ---------- */
+
+function startFallbackCity() {
+  const canvas = $("#city-canvas");
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  let width = 0;
+  let height = 0;
+  let frame = 0;
+  let buildings = [];
+  let stars = [];
+  let pointerX = 0;
+  let pointerY = 0;
+
+  function resize() {
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+
+    width = window.innerWidth;
+    height = window.innerHeight;
+
+    canvas.width = Math.floor(width * pixelRatio);
+    canvas.height = Math.floor(height * pixelRatio);
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+
+    ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+    buildings = [];
+    const buildingWidth = width < 600 ? 24 : 36;
+    let x = -5;
+
+    while (x < width + buildingWidth) {
+      const buildingHeight = 35 + Math.random() * height * 0.25;
+
+      buildings.push({
+        x,
+        w: buildingWidth - 3,
+        h: buildingHeight,
+        tint: Math.random() > 0.5 ? "#00f5ff" : "#ff35d3",
+        lights: Array.from({ length: 5 }, () => Math.random() > 0.5)
+      });
+
+      x += buildingWidth;
+    }
+
+    stars = Array.from({ length: Math.min(120, Math.floor(width / 5)) }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      r: Math.random() * 1.5,
+      phase: Math.random() * Math.PI * 2
+    }));
+  }
+
+  function draw(time) {
+    frame = requestAnimationFrame(draw);
+
+    if (document.hidden) return;
+
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = "#050611";
+    ctx.fillRect(0, 0, width, height);
+
+    const seconds = time * 0.001;
+    const shiftX = reduceMotion ? 0 : pointerX * 9;
+    const shiftY = reduceMotion ? 0 : pointerY * 4;
+
+    // Distant stars.
+    stars.forEach((star) => {
+      const opacity = 0.25 + Math.abs(Math.sin(seconds + star.phase)) * 0.55;
+      ctx.globalAlpha = opacity;
+      ctx.fillStyle = "#a9faff";
+      ctx.fillRect(star.x, star.y, star.r, star.r);
+    });
+
+    ctx.globalAlpha = 1;
+
+    // Neon skyline silhouettes.
+    buildings.forEach((building, index) => {
+      const bx = building.x + shiftX * (index % 2 ? 1 : -1);
+      const by = height - building.h + shiftY;
+
+      ctx.fillStyle = "#090d22";
+      ctx.fillRect(bx, by, building.w, building.h);
+
+      ctx.strokeStyle = building.tint;
+      ctx.globalAlpha = 0.28;
+      ctx.strokeRect(bx, by, building.w, building.h);
+      ctx.globalAlpha = 1;
+
+      for (let row = 0; row < building.lights.length; row++) {
+        if (!building.lights[row]) continue;
+
+        ctx.fillStyle = building.tint;
+        ctx.globalAlpha = 0.3 + Math.abs(Math.sin(seconds + row + index)) * 0.5;
+        ctx.fillRect(bx + 5, by + 10 + row * 12, 3, 4);
       }
     });
+
+    ctx.globalAlpha = 1;
+
+    // A softly animated central hologram.
+    const cx = width * 0.5 + shiftX;
+    const cy = height * 0.48 + shiftY;
+    const baseRadius = Math.min(width * 0.22, 150);
+
+    for (let i = 0; i < 3; i++) {
+      ctx.beginPath();
+      ctx.ellipse(
+        cx,
+        cy,
+        baseRadius * (0.7 + i * 0.2),
+        baseRadius * (0.7 + i * 0.2),
+        seconds * (i % 2 ? -0.15 : 0.15),
+        0,
+        Math.PI * 2
+      );
+
+      ctx.strokeStyle = i === 1 ? "#ff35d3" : "#00f5ff";
+      ctx.globalAlpha = 0.23 + Math.abs(Math.sin(seconds + i)) * 0.3;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    ctx.globalAlpha = 1;
+
+    // Perspective grid near the bottom.
+    ctx.strokeStyle = "#00f5ff";
+    ctx.globalAlpha = 0.15;
+    ctx.lineWidth = 1;
+
+    const horizon = height * 0.68;
+
+    for (let i = 0; i < 15; i++) {
+      const y = horizon + Math.pow(i / 14, 2) * height * 0.35;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(width, y);
+      ctx.stroke();
+    }
+
+    for (let i = -10; i <= 10; i++) {
+      ctx.beginPath();
+      ctx.moveTo(width * 0.5 + i * 2, horizon);
+      ctx.lineTo(width * 0.5 + i * width * 0.08, height);
+      ctx.stroke();
+    }
+
+    ctx.globalAlpha = 1;
   }
+
+  if (finePointer && !reduceMotion) {
+    window.addEventListener("pointermove", (event) => {
+      pointerX = event.clientX / width - 0.5;
+      pointerY = event.clientY / height - 0.5;
+    }, { passive: true });
+  }
+
+  window.addEventListener("resize", resize, { passive: true });
+  resize();
+  draw(0);
+
+  window.addEventListener("pagehide", () => cancelAnimationFrame(frame));
+}
+
+/* ---------- START RENDERER ---------- */
+
+startCyberpunkCity().catch((error) => {
+  console.warn(
+    "3D city could not start; using the animated fallback instead.",
+    error
+  );
+
+  startFallbackCity();
 });
